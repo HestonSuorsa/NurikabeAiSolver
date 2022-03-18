@@ -1,16 +1,47 @@
-public class Board {
-    String[][] board;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
-    public Boolean lakeExists() {
-        // TODO: Check if any lakes create 2x2
-        return false;
+public class Board {
+    Boolean[][] board;
+    int height, width;
+
+    public Board(int height, int width) {
+        this.board = new Boolean[height][width];
+        // TODO: might need to initialize to all land (true)
+        this.height = height;
+        this.width = width;
     }
-    public Boolean pondExists() {
-        // TODO: Make sure water can be connected
-        return false;
+
+    public Board clone() {
+        Board newB = new Board(height,width);
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                newB.board[r][c] = board[r][c];
+            }
+        }
+        return newB;
     }
-    public Boolean checkIslands() {
-        // TODO: Check if islands are no more than their max number
-        return false;
+
+    public Board drawWater(int row, int col) {
+        board[row][col] = false;
+        return this;
+    }
+
+    public Board drawLand(int row, int col) {
+        board[row][col] = true;
+        return this;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                if (board[r][c]) sb.append(" ");
+                else sb.append("#");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
