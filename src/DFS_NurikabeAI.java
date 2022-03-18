@@ -1,40 +1,47 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DFS_NurikabeAI {
-    ArrayList<OriginIsland> islands = new ArrayList<>();
-    static int height, width;
+    ArrayList<OriginIsland> islands;
+    int height, width, numIslands;
 
-    public static void main() {
+    public DFS_NurikabeAI(String content) {
+        Scanner scan = new Scanner(content);
+        height = scan.nextInt();
+        width = scan.nextInt();
+        numIslands = scan.nextInt();
+        islands = new ArrayList<>(numIslands);
+        for (int i = 0; i < numIslands; i++) {
+            int size = scan.nextInt();
+            int row = scan.nextInt();
+            int col = scan.nextInt();
+            islands.add(new OriginIsland(size, row, col));
+        }
+    }
+
+    public void run() {
         // TODO: run logic
         Board start = new Board(height, width);
         DFS(start, 0, 0);
     }
 
-    public DFS_NurikabeAI(String content) {
-        // TODO: Parse content to get board dimensions
-        // TODO: Parse content to get origin island locations
-    }
-
-    public static void DFS(Board b, int curRow, int curCol) {
+    public void DFS(Board b, int curRow, int curCol) {
+        // Goal State check (on last index)
         if (isLastIndex(curRow,curCol)) {
-            Board lastWater = b.clone().drawWater(curRow,curCol);
-            if (isGoal(lastWater, curRow, curCol)) {
-                System.out.println(lastWater.toString());
-                return;
+            Board lastWater = b.clone().drawWater(b.width-1,b.height-1);
+            if (isValid(lastWater,curRow,curCol)) {
+                System.out.println(lastWater.toString(islands));
+                return; // Found solution
             }
-            Board lastLand = b.clone().drawWater(curRow,curCol);
-            if (isGoal(lastLand, curRow, curCol)) {
-                System.out.println(lastLand.toString());
-                return;
+            Board lastLand = b.clone().drawLand(b.width-1,b.height-1);
+            if (isValid(lastLand,curRow,curCol)) {
+                System.out.println(lastLand.toString(islands));
+                return; // Found solution
             }
             System.out.println("No solution found");
-            return;
+            return; // No solution found
         }
-        if (isGoal(b,curRow,curCol)) {
-            System.out.println(b.toString());
-            return;
-        }
-        if (!isValid(b)) { return; }
+        if (!isValid(b,curRow,curCol)) { return; }
         int nextRow = curRow + 1 % width;
         int nextCol = curCol;
         if (curRow == width-1) nextCol++;
@@ -46,25 +53,30 @@ public class DFS_NurikabeAI {
      * violate any constraints else false
      * @return Boolean
      */
-    public static Boolean isValid(Board b) {
-        return lakeExists(b) && pondExists(b) && checkIslands(b);
+    public Boolean isValid(Board b, int curRow, int curCol) {
+        return lakeExists(b,curRow,curCol) && pondExists(b,curRow,curCol) && checkIslands(b,curRow,curCol);
     }
-    public static Boolean isGoal(Board b, int curRow, int curCol) {
-        return isLastIndex(curRow,curCol) && isValid(b);
+    public Boolean isLastIndex(int r, int c) {
+        return r == height && c == width;
     }
-    public static Boolean isLastIndex(int curRow, int curCol) {
-        return curCol == height && curRow == width;
-    }
-    public static Boolean lakeExists(Board b) {
+    public Boolean lakeExists(Board b, int r, int c) {
         // TODO: Check if any lakes create 2x2
         return false;
     }
-    public static Boolean pondExists(Board b) {
+    public Boolean pondExists(Board b, int r, int c) {
         // TODO: Make sure water can be connected
         return false;
     }
-    public static Boolean checkIslands(Board b) {
+    public Boolean checkIslands(Board b, int r, int c) {
         // TODO: Check if islands are no more than their max number
         return false;
+    }
+    public String islandsToString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Islands: [size]@(row,col)\n");
+        for (OriginIsland island: islands) {
+            sb.append((island.toString()+"\n"));
+        }
+        return sb.toString();
     }
 }

@@ -1,5 +1,7 @@
+import java.util.Comparator;
+
 public class OriginIsland {
-    int size, row, col;
+    public int size, row, col;
 
     public OriginIsland(int size, int row, int col) {
         this.size = size;
@@ -7,4 +9,7 @@ public class OriginIsland {
         this.col = col;
     }
 
+    public String toString() {
+        return "[" + size + "]@(" + row + "," + col + ")";
+    }
 }
