@@ -5,18 +5,10 @@ public class DFS_NurikabeAI {
     ArrayList<OriginIsland> islands;
     int height, width, numIslands;
 
-    public DFS_NurikabeAI(String content) {
-        Scanner scan = new Scanner(content);
-        height = scan.nextInt();
-        width = scan.nextInt();
-        numIslands = scan.nextInt();
-        islands = new ArrayList<>(numIslands);
-        for (int i = 0; i < numIslands; i++) {
-            int size = scan.nextInt();
-            int row = scan.nextInt();
-            int col = scan.nextInt();
-            islands.add(new OriginIsland(size, row, col));
-        }
+    public DFS_NurikabeAI(int height, int width, int numIslands) {
+        this.height = height;
+        this.width = width;
+        this.numIslands = numIslands;
     }
 
     public void run() {
