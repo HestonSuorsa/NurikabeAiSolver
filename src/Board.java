@@ -3,20 +3,49 @@ import java.util.Arrays;
 
 public class Board {
     // Boolean[][] board;
-    Cell[] board;
+    Cell[][] board;
     int height, width;
     int numCells;
 
     public Board(int height, int width) {
         // this.board = new Boolean[height][width];
-        numCells = height*width;
-        this.board = new Cell[numCells];
-        for(int i=0; i<numCells; i++) {
-            board[i] = new Cell(i,false);
-            board[i].setIsWater(true);
-        }
         this.height = height;
         this.width = width;
+        numCells = height*width;
+        this.board = new Cell[height][width];
+        for(int r=0; r<height; r++) {
+            for(int c=0; c<width; c++) {
+                board[r][c] = new Cell(r,c,false);
+                board[r][c].setIsWater(true);
+            }
+        }
+
+    }
+
+    public ArrayList<Cell> getNeighbors(int row, int col) {
+        ArrayList<Cell> neighbors = new ArrayList<Cell>();
+
+        //Add left neighbor
+        if(col > 1) {
+            neighbors.add(board[row][col-1]);
+        }
+
+        //Add top neighbor
+        if(row > 1) {
+            neighbors.add(board[row-1][col]);
+        }
+
+        //Add right neighbor
+        if(col < width - 1) {
+            neighbors.add(board[row][col+1]);
+        }
+
+        //Add bottom neighbor
+        if(row < height - 1) {
+            neighbors.add(board[row+1][col]);
+        }
+
+        return neighbors;
     }
 
     public Cell getValue(int row, int col) {

@@ -20,44 +20,32 @@ public class Main {
             int height = scan.nextInt();
             int width = scan.nextInt();
             int numIslands = scan.nextInt();
-            ArrayList<OriginIsland> islands = new ArrayList<>(numIslands);
-            // for (int i = 0; i < numIslands; i++) {
-            //     int size = scan.nextInt();
-            //     int row = scan.nextInt();
-            //     int col = scan.nextInt();
-            //     islands.add(new OriginIsland(size, row, col));
-            // }
 
-            //Initialize all Cells
-            ArrayList<Cell> cells = new ArrayList<Cell>();
-            for(int r=0; r<height; r++) {
-                for(int c=0; c<width; c++) {
-                    cells.add(new Cell((r+c),false));   //start as not origin
-                }
-            }
+            //Initialize Board
+            Board board = new Board(height, width);
 
             //Add Origin islands
             for (int i = 0; i < numIslands; i++) {
                 int size = scan.nextInt();
                 int row = scan.nextInt();
                 int col = scan.nextInt();
-                cells.get(row+col).setIsOrigin(true);
-                // islands.add(new OriginIsland(size, row, col));
+                board.getCell(row,col).setIsOrigin(true);
+                board.getCell(row, col).setIslandSize(size);
             }
 
+            //Now the board is completely initialized and dfs can happen
 
-
-            // DFS_NurikabeAI dfs = new DFS_NurikabeAI(height, width, numIslands, islands);
+            //This breaks bc we aren't done yet lol
+            DFS_NurikabeAI dfs = new DFS_NurikabeAI(height, width, numIslands);
 
             // TODO: TESTED Comparators (THEY WORK!!!!)
-            dfs.islands.sort(new SortByPosition());
-            System.out.println("\nBy Position:\n" + dfs.islandsToString());
+            // dfs.islands.sort(new SortByPosition());
+            // System.out.println("\nBy Position:\n" + dfs.islandsToString());
 
-            dfs.islands.sort(new SortBySize());
-            System.out.println("\nBy Size:\n" + dfs.islandsToString());
+            // dfs.islands.sort(new SortBySize());
+            // System.out.println("\nBy Size:\n" + dfs.islandsToString());
             // TODO: END of comparator test code
 
-            Board board = new Board(height, width);
             System.out.println(dfs.DFS(board, 0, 0));
 
         } catch (FileNotFoundException e) {

@@ -73,7 +73,11 @@ public class DFS_NurikabeAI {
     }
     public Boolean pondExists(Board b, int r, int c) {
         // TODO: Make sure water can be connected
-        return false;
+        //Make sure that there is only one pond in the board
+        if(getPonds(b).size() > 1) {
+            return false;
+        }
+        return true;
 
         //Begin logic for finding at most one black group
 
@@ -85,39 +89,45 @@ public class DFS_NurikabeAI {
         // TODO: Check if islands are no more than their max number
         return false;
     }
-    public String islandsToString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Islands: [size]@(row,col)\n");
-        for (OriginIsland island: islands) {
-            sb.append((island.toString()+"\n"));
-        }
-        return sb.toString();
-    }
-}
+
+    //Commented out bc i wasnt sure what this should be doing since this class no longer holds originIsland array
+    // public String islandsToString() {
+    //     StringBuilder sb = new StringBuilder();
+    //     sb.append("Islands: [size]@(row,col)\n");
+    //     for (int r=0; r<height; r++) {
+    //         for(int c=0; c<width; c++) {
+    //             if(board.getCell(r,c).getIsOrigin()) {
+    //                 sb.append((island.toString()+"\n"));
+    //             }
+    //         }
+    //     }
+    //     return sb.toString();
+    // }
 
 
 
-public Set<Set<Cell>> getGroups(boolean valueOfWater, Board board) {
+
+/**
+ * Will return a set of set of connected cells. 
+ * @param board
+ * @return
+ */
+public Set<Set<Cell>> getPonds(Board board) {
     Set<Cell> cellsWithColor = new HashSet<>();
-    for (Cell cell : bo) {
-      if (cell.getColor() == cellColor) {
-        cellsWithColor.add(cell);
-      }
-    }
 
     for(int r=0; r<height; r++) {
         for(int c=0; c<width; c++) {
-            if(board.getValue(r,c).getIsWater()) {
-                cellsWithColor.add(board.getValue(r, c));
+            if(board.getCell(r,c).getIsWater()) {
+                cellsWithColor.add(board.getCell(r, c));
             }
         }
     }
 
     final Set<Set<Cell>> result = new HashSet<>();
     while (!cellsWithColor.isEmpty()) {
-      final Set<Cell> group = new HashSet();
+      final Set<Cell> group = new HashSet<Cell>();
       final Cell startCell = cellsWithColor.iterator().next();
-      findConnectedCells(startCell, group);
+      findConnectedCells(startCell, group, board);
       result.add(group);
 
       cellsWithColor.removeAll(group);
@@ -126,16 +136,15 @@ public Set<Set<Cell>> getGroups(boolean valueOfWater, Board board) {
     return result;
   }
 
-  private void findConnectedCells(Cell cell, Set<Cell> result) {
+  private void findConnectedCells(Cell cell, Set<Cell> result, Board b) {
     result.add(cell);
-    int curIndex = cell.getIndex();
 
     //Add checking for being next to walls
-    if(board.getValue(curIndex/height - 1, curIndex%width).getIsWater && cell.getIsWater() ) {
-        System.out.println("The nrighbor to the left is also water")
+    ArrayList<Cell> neighbors = b.getNeighbors(cell.getRow(), cell.getCol());
+    for(Cell neighbor : neighbors) {
+        if(neighbor.getIsWater() && cell.getIsWater() && !result.contains(neighbor)) {
+            findConnectedCells(neighbor, result, b);
+        }
     }
-    getNeighbors(cell).filter(neighbor -> neighbor.getColor() == cell.getColor())
-        .filter(neighbor -> !result.contains(neighbor))
-        .forEach(neighbor -> findConnectedCells(neighbor, result));
-  }
+    }
 }

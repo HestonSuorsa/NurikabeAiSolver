@@ -1,24 +1,32 @@
 import java.util.ArrayList;
 
 public class Cell {
-    private int index;
+    private int row;
+    private int col;
     private int islandSize;
     private boolean isOrigin, isLand, isWater;
-    private ArrayList<Cell> neighbors;
     //Maybe every cell stores a list of its neighbors...
 
-    public Cell(int index, boolean isOrigin) {
-        this.index = index;
+    public Cell(int row, int col, boolean isOrigin) {
+        this.row = row;
+        this.col = col;
         this.isOrigin = isOrigin;
-        neighbors = new ArrayList<Cell>();
     }
 
-    public int getIndex() {
-        return index;
+    public int getRow() {
+        return row;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 
     public int getIslandSize() {
@@ -56,7 +64,7 @@ public class Cell {
     @Override
     public String toString() {
         String ret;
-        ret = "(" + index + "): ";
+        ret = "(" + row + ", " + col + "): ";
         if(isLand) {
             ret += "L";
         }
@@ -68,7 +76,12 @@ public class Cell {
     }
 
     public Cell clone() {
-        Cell newC = new Cell(this.index, this.isOrigin);
+        Cell newC = new Cell(this.row, this.col, this.isOrigin);
+        newC.setIsLand(this.isLand);
+        newC.setIsWater(this.isWater);
+        if(this.isOrigin) {
+            newC.setIslandSize(this.islandSize);
+        }
         return newC;
     }
 
