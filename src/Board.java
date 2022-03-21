@@ -2,36 +2,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
-    Boolean[][] board;
+    // Boolean[][] board;
+    Cell[] board;
     int height, width;
+    int numCells;
 
     public Board(int height, int width) {
-        this.board = new Boolean[height][width];
-        // Fill board to all land
-        for (int row = 0; row < height; row++) {
-            Arrays.fill(board[row], true);
+        // this.board = new Boolean[height][width];
+        numCells = height*width;
+        this.board = new Cell[numCells];
+        for(int i=0; i<numCells; i++) {
+            board[i] = new Cell(i,false);
+            board[i].setIsWater(true);
         }
         this.height = height;
         this.width = width;
+    }
+
+    public Cell getValue(int row, int col) {
+        return board[row][col];
     }
 
     public Board clone() {
         Board newB = new Board(height,width);
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
-                newB.board[r][c] = board[r][c];
+                newB.board[r][c] = board[r][c].clone();
             }
         }
         return newB;
     }
 
     public Board drawWater(int row, int col) {
-        board[row][col] = false;
+        board[row][col].setIsWater(true);
         return this;
     }
 
     public Board drawLand(int row, int col) {
-        board[row][col] = true;
+        board[row][col].setIsLand(true);
         return this;
     }
 
@@ -43,7 +51,7 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
-                if (board[r][c]) sb.append(" ");
+                if (board[r][c].getIsLand()) sb.append(" ");
                 else sb.append("#");
             }
             sb.append("\n");
@@ -66,7 +74,7 @@ public class Board {
                     sb.append(curr.size);
                     curr = islands.get(--i);
                 }
-                else if (board[r][c]) sb.append(" ");
+                else if (board[r][c].getIsLand()) sb.append(" ");
                 else sb.append("#");
             }
             sb.append("\n");
