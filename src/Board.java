@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Board {
     // Boolean[][] board;
@@ -18,7 +19,6 @@ public class Board {
                 board[r][c].setIsWater();
             }
         }
-
     }
 
     public ArrayList<Cell> getNeighbors(int row, int col) {

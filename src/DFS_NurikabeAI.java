@@ -34,41 +34,31 @@ public class DFS_NurikabeAI {
 
         // Goal State check (on last index)
         if (isLastIndex(curRow,curCol)) {
-            if (!curCell.getIsOrigin() && isValid(b.drawWater(b.width-1,b.height-1),curRow,curCol)) {
+            if (isGoal(b,curRow,curCol)) {
                 endBoard = b.toString(); // Found solution
                 return true;
             }
-            if (isValid(b.drawLand(b.width-1,b.height-1),curRow,curCol)) {
-                endBoard = b.toString(); // Found solution
-                return true;
-            }
-            return false; // No solution found
+            if (!curCell.getIsOrigin()) b.drawWater(curRow, curCol);
+            return false; // Invalid solution
         }
+
         // Continue if not on last index
 
         int nextCol = (curCol+1) % width;
         int nextRow = curRow;
         if (curCol == width-1) nextRow++;
-        Cell nextCell = b.getCell(nextRow,nextCol);
 
-        System.out.println("Before validation:\n" + b); // <=== TODO: Test tool
-
-        if (!isValid(b,curRow,curCol)) {
-            // Reset to water no matter what
-            if (!curCell.getIsOrigin()) curCell.setIsWater();
-            System.out.println("After validation:\n" + b); // <=== TODO: Test tool
-            return false;
+        if(isValid(b.drawLand(curRow,curCol), curRow, curCol)) {
+            if (DFS(b, nextRow, nextCol)) return true;
         }
 
+        if (!curCell.getIsOrigin() && isValid(b.drawWater(curRow,curCol), curRow, curCol)) {
+            if (DFS(b, nextRow, nextCol)) return true;
+        }
 
-        // TODO: Could this work too? v
-        // return DFS(b.drawWater(curRow, curCol), nextRow, nextCol) || DFS(b.drawLand(curRow, curCol), nextRow, nextCol)
-        if(!curCell.getIsOrigin() && DFS(b.drawWater(curRow, curCol), nextRow, nextCol)) {
-            return true;
-        }
-        else if (DFS(b.drawLand(curRow, curCol), nextRow, nextCol)) {
-            return true;
-        }
+        if (!curCell.getIsOrigin()) b.drawWater(curRow, curCol);
+
+        // At this point, backtrack
         return false;
     }
     /**
@@ -80,8 +70,27 @@ public class DFS_NurikabeAI {
         return !lakeExists(b,curRow,curCol) && !pondExists(b) && checkIslands(b);
     }
 
+    /**
+     * Does all that isValid does but also make sure there are no
+     * straggling islands
+     * @param b
+     * @param curRow
+     * @param curCol
+     * @return
+     */
+    public Boolean isValidEndGoal(Board b, int curRow, int curCol) {
+        return !lakeExists(b,curRow,curCol) && !pondExists(b) && verifyIslands(b);
+    }
+
     public Boolean isLastIndex(int r, int c) {
         return r == height-1 && c == width-1;
+    }
+
+    public Boolean isGoal(Board b, int r, int c) {
+        Cell curCell = b.getCell(r,c);
+        if (isValidEndGoal(b.drawLand(r,c),r,c)) return true;
+        if (!curCell.getIsOrigin() && isValidEndGoal(b.drawWater(r,c),r,c)) return true;
+        return false; // Invalid solution
     }
 
     public Boolean lakeExists(Board b, int r, int c) {
@@ -89,17 +98,12 @@ public class DFS_NurikabeAI {
         // Return false if drew land, or if impossible for lake to have been made
         else { // Cell is water (check cells that for 2x2 w/ this as right lower corner)
             return b.getCell(r,c-1).getIsWater() && b.getCell(r-1,c-1).getIsWater()
-                    && b.getCell(r-1,c-1).getIsWater();
+                    && b.getCell(r-1,c).getIsWater();
         }
     }
     public Boolean pondExists(Board b) {
         // TODO: Make sure water can be connected
         //Make sure that there is only one pond in the board
-//        if(getPonds(b).size() > 1) {
-//            return false;
-//        }
-//        return true;
-
         Set<Cell> cellsWithWater = new HashSet<>();
 
         for(int r=0; r<height; r++) {
@@ -118,61 +122,36 @@ public class DFS_NurikabeAI {
 
 
     public Boolean checkIslands(Board b) {
-        // TODO: Check if islands are no more than their max number
         Set<Cell> lands = new HashSet<>();
         for (Cell o : originIslands) {
             findConnectedLand(o, lands, b);
-            if (lands.size() > o.getIslandSize())
-                return false;
+            if (lands.size() > o.getIslandSize()) return false;
             lands.clear();
         }
         return true;
     }
 
-    //Commented out bc i wasnt sure what this should be doing since this class no longer holds originIsland array
-    // public String islandsToString() {
-    //     StringBuilder sb = new StringBuilder();
-    //     sb.append("Islands: [size]@(row,col)\n");
-    //     for (int r=0; r<height; r++) {
-    //         for(int c=0; c<width; c++) {
-    //             if(board.getCell(r,c).getIsOrigin()) {
-    //                 sb.append((island.toString()+"\n"));
-    //             }
-    //         }
-    //     }
-    //     return sb.toString();
-    // }
-
-
-
-
-/**
- * Will return a set of set of connected cells. 
- * @param board
- * @return
- */
-public Set<Set<Cell>> getPonds(Board board) {
-    Set<Cell> cellsWithColor = new HashSet<>();
+public boolean verifyIslands(Board board) {
+    int totalLands = 0;
 
     for(int r=0; r<height; r++) {
         for(int c=0; c<width; c++) {
-            if(board.getCell(r,c).getIsWater()) {
-                cellsWithColor.add(board.getCell(r, c));
+            if(board.getCell(r,c).getIsLand()) {
+                totalLands++;
             }
         }
     }
 
-    final Set<Set<Cell>> result = new HashSet<>();
-    while (!cellsWithColor.isEmpty()) {
-      final Set<Cell> group = new HashSet<Cell>();
-      final Cell startCell = cellsWithColor.iterator().next();
-      findConnectedWater(startCell, group, board);
-      result.add(group);
+    int accountedFor = 0;
 
-      cellsWithColor.removeAll(group);
+    Set<Cell> lands = new HashSet<>();
+    for (Cell o : originIslands) {
+        findConnectedLand(o, lands, board);
+        if (lands.size() != o.getIslandSize()) return false;
+        accountedFor += lands.size();
+        lands.clear();
     }
-
-    return result;
+    return (accountedFor == totalLands);
   }
 
   private void findConnectedWater(Cell cell, Set<Cell> result, Board b) {
@@ -185,16 +164,17 @@ public Set<Set<Cell>> getPonds(Board board) {
             findConnectedWater(neighbor, result, b);
         }
     }
-    }
+  }
 
     private void findConnectedLand(Cell cell, Set<Cell> result, Board b) {
         result.add(cell);
 
         //Add checking for being next to walls
         ArrayList<Cell> neighbors = b.getNeighbors(cell.getRow(), cell.getCol());
+
         for(Cell neighbor : neighbors) {
             if(neighbor.getIsLand() && cell.getIsLand() && !result.contains(neighbor)) {
-                findConnectedWater(neighbor, result, b);
+                findConnectedLand(neighbor, result, b);
             }
         }
     }

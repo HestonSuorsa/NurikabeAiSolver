@@ -58,13 +58,8 @@ public class Cell {
 
     @Override
     public String toString() {
-//        String ret;
-//        ret = "(" + row + ", " + col + "): ";
-//        if (isWater) ret += "W";
-//        else ret += "L";
-//        return ret;
-        //if (isOrigin) return "" + islandSize; // Island Size
-        /*else*/ if (isWater) return "W"; // Water
+        if (isOrigin) return "" + islandSize; // Island Size
+        else if (isWater) return "W"; // Water
         else return "L"; // Land
     }
 

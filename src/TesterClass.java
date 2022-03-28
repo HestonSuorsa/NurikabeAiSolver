@@ -1,15 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class TesterClass {
     public static void main(String[] args) {
-        // TODO: Run AI implementations and time them
         Scanner scan = null;
         try {
-            File f = new File("5x5_1.txt");
+            File f = new File("test.txt");
             scan = new Scanner(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -34,12 +31,15 @@ public class Main {
             curCell.setIsLand();
             curCell.setIslandSize(size);
         }
+        board.getCell(0,0).setIsLand();
+        board.getCell(1,0).setIsLand();
+        board.getCell(1,1).setIsLand();
 
         //Now the board is completely initialized and dfs can happen
 
         //This breaks bc we aren't done yet lol
         DFS_NurikabeAI dfs = new DFS_NurikabeAI(board, numIslands);
-
-        System.out.println(dfs.run());
+        System.out.println(board);
+        System.out.println(dfs.checkIslands(board));
     }
 }
