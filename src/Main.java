@@ -41,5 +41,6 @@ public class Main {
         DFS_NurikabeAI dfs = new DFS_NurikabeAI(board, numIslands);
 
         System.out.println(dfs.run());
+        System.out.println("Nodes visited: " + dfs.nodesVisited);
     }
 }
