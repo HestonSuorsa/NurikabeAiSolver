@@ -7,6 +7,7 @@ public class DFS_NurikabeAI {
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
     String endBoard;
+    int nodesVisited;
 
     public DFS_NurikabeAI(Board board, int numIslands) {
         this.gameBoard = board;
@@ -22,6 +23,7 @@ public class DFS_NurikabeAI {
         }
         this.endBoard = board.toString();
         originIslands.sort(new SortByPosition());
+        nodesVisited = 0;
     }
 
     public String run() {
@@ -31,6 +33,7 @@ public class DFS_NurikabeAI {
 
     public boolean DFS(Board b, int curRow, int curCol) {
         Cell curCell = b.getCell(curRow,curCol);
+        nodesVisited++;
 
         // Goal State check (on last index)
         if (isLastIndex(curRow,curCol)) {
