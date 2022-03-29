@@ -41,13 +41,13 @@ public class Main {
         //Now the board is completely initialized and dfs can happen
 
         //This breaks bc we aren't done yet lol
-//        DFS_NurikabeAI dfs = new DFS_NurikabeAI(board1, numIslands);
-//
-//        System.out.println(dfs.run());
-//        System.out.println("Nodes visited: " + dfs.nodesVisited);
+        DFS_NurikabeAI dfs = new DFS_NurikabeAI(board1, numIslands);
 
-        MostConstrained_NurikabeAI mc = new MostConstrained_NurikabeAI(board2, numIslands);
-        mc.run();
-        System.out.println(board2);
+        System.out.println(dfs.run());
+        System.out.println("Nodes visited: " + dfs.nodesVisited);
+
+//        MostConstrained_NurikabeAI mc = new MostConstrained_NurikabeAI(board2, numIslands);
+//        mc.run();
+//        System.out.println(board2);
     }
 }

@@ -66,43 +66,46 @@ public class MostConstrained_NurikabeAI {
                 System.out.println(currOriginIsland);
                 while (currIslandSize < currOriginIsland.getIslandSize())  {
                     System.out.println("Curr island size " + currIslandSize);
-                    int currIslandRow = currOriginIsland.getRow();
-                    int currIslandCol = currOriginIsland.getCol();
+                    Set<Cell> exploredCells = new HashSet<Cell>();
+//                    int currIslandRow = currOriginIsland.getRow();
+//                    int currIslandCol = currOriginIsland.getCol();
 
                     //add neighbors to list
-                    ArrayList<Cell> potentialLandNeighbors = new ArrayList<Cell>();
-                    potentialLandNeighbors.add(getLeftNeighbor(b, currIslandRow, currIslandCol));
-                    potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
-                    potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
-                    potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
-                    System.out.println(potentialLandNeighbors);
+//                    ArrayList<Cell> potentialLandNeighbors = new ArrayList<Cell>();
+//                    potentialLandNeighbors.add(getLeftNeighbor(b, currIslandRow, currIslandCol));
+//                    potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
+//                    potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
+//                    potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
+//                    System.out.println(potentialLandNeighbors);
+//
+//
+//                    //See if any of these neighbors are cut islands
+//                    Set<Cell> rejectSet = new HashSet<>();
+//                    for(Cell potentialLandNeighbor : potentialLandNeighbors) {
+//                        if(potentialLandNeighbor == null) {
+//                            rejectSet.add(potentialLandNeighbor);
+//                            continue;
+//                        }
+////                        if(potentialLandNeighbor.getIsLand()) {
+////                            rejectSet.add(potentialLandNeighbor);
+////                            continue;
+////                        }
+//                        ArrayList<Cell> neighborNeighbors = b.getNeighbors(potentialLandNeighbor.getRow(),potentialLandNeighbor.getCol());
+//                        for(Cell cell : neighborNeighbors) {
+//                            if(cell.getIsLand() && cell != currOriginIsland) {
+//                                rejectSet.add(potentialLandNeighbor);
+//                                break;
+//                            }
+//                        }
+//                    }
+//
+//                    //Remove the reject set from potential land
+////                    potentialLandNeighbors.removeAll(rejectSet);
+//                    for(Cell cell: rejectSet) {
+//                        potentialLandNeighbors.remove(cell);
+//                    }
 
 
-                    //See if any of these neighbors are cut islands
-                    Set<Cell> rejectSet = new HashSet<>();
-                    for(Cell potentialLandNeighbor : potentialLandNeighbors) {
-                        if(potentialLandNeighbor == null) {
-                            rejectSet.add(potentialLandNeighbor);
-                            continue;
-                        }
-                        if(potentialLandNeighbor.getIsLand()) {
-                            rejectSet.add(potentialLandNeighbor);
-                            continue;
-                        }
-                        ArrayList<Cell> neighborNeighbors = b.getNeighbors(potentialLandNeighbor.getRow(),potentialLandNeighbor.getCol());
-                        for(Cell cell : neighborNeighbors) {
-                            if(cell.getIsLand() && cell != currOriginIsland) {
-                                rejectSet.add(potentialLandNeighbor);
-                                break;
-                            }
-                        }
-                    }
-
-                    //Remove the reject set from potential land
-//                    potentialLandNeighbors.removeAll(rejectSet);
-                    for(Cell cell: rejectSet) {
-                        potentialLandNeighbors.remove(cell);
-                    }
 
                     //can expant potential negihbors to negihbor neighbors!! for more land :)
 
@@ -112,14 +115,34 @@ public class MostConstrained_NurikabeAI {
 //                        potentialLandNeighbors.get(0).setIsLand();
 //                        System.out.println("I set the land");
 //                    }
-                    for(Cell cell : potentialLandNeighbors) {
-                        System.out.println(cell);
-                        System.out.println(b);
-                        if(cell != null) {
-                            cell.setIsLand();
+
+                    Cell temp = currOriginIsland;
+                    boolean waterFound = false;
+                    while(!waterFound) {
+
+                        ArrayList<Cell> potentialLandNeighbors = getPotentialLandNeighbors(b,temp);
+                        for (Cell cell : potentialLandNeighbors) {
+                            System.out.println(cell);
                             System.out.println(b);
+                            if (cell != null && cell.getIsWater()) {
+                                waterFound = true;
+                                cell.setIsLand();
+                                System.out.println(b);
+                            }
+                        }
+                        exploredCells.add(temp);
+                        //call method to add neighbor neighbors to potential land and prune again
+                        if(!waterFound) {
+                            for(Cell cell : potentialLandNeighbors) {
+                                if(cell != null && !exploredCells.contains(cell)) {
+                                    System.out.println("Reassigning temp\n");
+                                    temp=cell;
+                                    break;
+                                }
+                            }
                         }
                     }
+
                     Set<Cell> lands = new HashSet<>();
                     findConnectedLand(currOriginIsland, lands, b);
                     currIslandSize = lands.size();
@@ -159,6 +182,47 @@ public class MostConstrained_NurikabeAI {
     }
     private Cell getBottomNeighbor(Board b, int r, int c) {
         return b.getCell(r-1,c);
+    }
+
+    private ArrayList<Cell> getPotentialLandNeighbors(Board b, Cell currOriginIsland) {
+        int currIslandRow = currOriginIsland.getRow();
+        int currIslandCol = currOriginIsland.getCol();
+
+        ArrayList<Cell> potentialLandNeighbors = new ArrayList<Cell>();
+        potentialLandNeighbors.add(getLeftNeighbor(b, currIslandRow, currIslandCol));
+        potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
+        potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
+        potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
+        System.out.println(potentialLandNeighbors);
+
+
+        //See if any of these neighbors are cut islands
+        Set<Cell> rejectSet = new HashSet<>();
+        for(Cell potentialLandNeighbor : potentialLandNeighbors) {
+            if(potentialLandNeighbor == null) {
+                rejectSet.add(potentialLandNeighbor);
+                continue;
+            }
+//                        if(potentialLandNeighbor.getIsLand()) {
+//                            rejectSet.add(potentialLandNeighbor);
+//                            continue;
+//                        }
+            ArrayList<Cell> neighborNeighbors = b.getNeighbors(potentialLandNeighbor.getRow(),potentialLandNeighbor.getCol());
+            for(Cell cell : neighborNeighbors) {
+                if(cell.getIsLand() && cell != currOriginIsland) {
+                    rejectSet.add(potentialLandNeighbor);
+                    break;
+                }
+            }
+        }
+
+        //Remove the reject set from potential land
+//                    potentialLandNeighbors.removeAll(rejectSet);
+        for(Cell cell: rejectSet) {
+            potentialLandNeighbors.remove(cell);
+        }
+
+        return potentialLandNeighbors;
     }
 
     // ------ CHECKER METHODS ------
