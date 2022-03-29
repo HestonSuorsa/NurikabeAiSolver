@@ -19,7 +19,7 @@ public class TesterClass {
         int numIslands = scan.nextInt();
 
         //Initialize Board
-        Board board = new Board(height, width);
+        Board board = new Board(height, width, true);
 
         //Add Origin islands
         for (int i = 0; i < numIslands; i++) {

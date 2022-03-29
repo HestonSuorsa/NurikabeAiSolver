@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLOutput;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +9,7 @@ public class Main {
         // TODO: Run AI implementations and time them
         Scanner scan = null;
         try {
-            File f = new File("5x5_X.txt");
+            File f = new File("10x10_1.txt");
             scan = new Scanner(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");

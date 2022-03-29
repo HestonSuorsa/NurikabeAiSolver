@@ -8,7 +8,7 @@ public class Board {
     int height, width;
     int numCells;
 
-    public Board(int height, int width) {
+    public Board(int height, int width, boolean setAllWater) {
         this.height = height;
         this.width = width;
         numCells = height*width;
@@ -16,7 +16,9 @@ public class Board {
         for(int r=0; r<height; r++) {
             for(int c=0; c<width; c++) {
                 board[r][c] = new Cell(r,c,false);
-                board[r][c].setIsWater();
+                if(setAllWater) {
+                    board[r][c].setIsWater();
+                }
             }
         }
     }
@@ -48,11 +50,18 @@ public class Board {
     }
 
     public Cell getCell(int row, int col) {
-        return board[row][col];
+        Cell cell;
+        try{
+            cell = board[row][col];
+        }
+        catch(Exception e) {
+            cell = null;
+        }
+        return cell;
     }
 
     public Board clone() {
-        Board newB = new Board(height,width);
+        Board newB = new Board(height,width,false);
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 newB.board[r][c] = board[r][c].clone();
