@@ -52,10 +52,12 @@ public class DFS_NurikabeAI {
         if (curCol == width-1) nextRow++;
 
         if(isValid(b.drawLand(curRow,curCol), curRow, curCol)) {
+            //System.out.println(b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
         if (!curCell.getIsOrigin() && isValid(b.drawWater(curRow,curCol), curRow, curCol)) {
+            //System.out.println(b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
@@ -128,10 +130,18 @@ public class DFS_NurikabeAI {
         Set<Cell> lands = new HashSet<>();
         for (Cell o : originIslands) {
             findConnectedLand(o, lands, b);
-            if (lands.size() > o.getIslandSize()) return false;
+            if (lands.size() > o.getIslandSize() || !onlyOneOrigin(lands)) return false;
             lands.clear();
         }
         return true;
+    }
+
+    public boolean onlyOneOrigin(Set<Cell> lands) {
+        int count = 0;
+        for (Cell land : lands) {
+            if (land.getIsOrigin()) count++;
+        }
+        return count == 1;
     }
 
 public boolean verifyIslands(Board board) {
@@ -150,7 +160,7 @@ public boolean verifyIslands(Board board) {
     Set<Cell> lands = new HashSet<>();
     for (Cell o : originIslands) {
         findConnectedLand(o, lands, board);
-        if (lands.size() != o.getIslandSize()) return false;
+        if (lands.size() != o.getIslandSize() || !onlyOneOrigin(lands)) return false;
         accountedFor += lands.size();
         lands.clear();
     }
