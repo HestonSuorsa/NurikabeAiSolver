@@ -57,16 +57,16 @@ public class DFS_NurikabeAI {
         if (curCol == width-1) nextRow++;
 
         if (!curCell.getIsOrigin() && isValid(b.drawWater(curRow,curCol), curRow, curCol)) {
-            System.out.println("draw water on (" + curRow + "," + curCol + ")\n" + b);
+            //System.out.println("draw water on (" + curRow + "," + curCol + ")\n" + b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
         if(isValid(b.drawLand(curRow,curCol), curRow, curCol)) {
-            System.out.println("draw land on (" + curRow + "," + curCol + ")\n" + b);
+            //System.out.println("draw land on (" + curRow + "," + curCol + ")\n" + b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
-        if (!curCell.getIsOrigin()) b.drawWater(curRow, curCol);
+        b.drawWater(curRow, curCol);
 
         // At this point, backtrack
         return false;

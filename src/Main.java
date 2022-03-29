@@ -22,7 +22,7 @@ public class Main {
         int numIslands = scan.nextInt();
 
         //Initialize Board
-        Board board = new Board(height, width);
+        Board board = new Board(height, width, true);
 
         //Add Origin islands
         for (int i = 0; i < numIslands; i++) {
@@ -31,7 +31,7 @@ public class Main {
             int col = scan.nextInt();
             Cell curCell = board.getCell(row,col);
             curCell.setIsOrigin(true);
-            curCell.setIsLand();
+            // curCell.setIsLand(); // TODO: removed to try to fix issue
             curCell.setIslandSize(size);
         }
 
