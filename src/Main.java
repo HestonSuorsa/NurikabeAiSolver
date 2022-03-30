@@ -23,20 +23,18 @@ public class Main {
                 "5x5_1.txt", "5x5_2.txt", "5x5_3.txt",
                 "5x5_4.txt", "5x5_5.txt", "5x5_6.txt"
         };
-        String[] _7x7s = new String[] { "10x10_1.txt", "7x7_2.txt" };
+        String[] _7x7s = new String[] { "7x7_1.txt", "7x7_2.txt" };
 
         allFiles.put(3,_3x3s); allFiles.put(5,_5x5s); allFiles.put(7,_7x7s);
         // LOADED DATA =====================================================|
 
         for (int key : allFiles.keySet()) {
-            if (key == 7) {
                 dfsTotalTime = 0;
                 dfsTotalNodes = 0;
                 mcTotalTime = 0;
                 String[] group = allFiles.get(key);
                 int numFiles = group.length;
                 for (int index = 0; index < numFiles; index++) {
-                    if (index == 0) {
                         try {
                             File f = new File(group[index]);
                             scan = new Scanner(f);
@@ -80,13 +78,11 @@ public class Main {
                         System.out.println("Ants ran in " + elapsed + " ms\n");
                         mcTotalTime += elapsed;
 
-                    }
                     System.out.println(key + "x" + key + " boards analysis:");
                     System.out.println("DFS average run time: " + dfsTotalTime / numFiles);
                     System.out.println("DFS average nodes visited: " + dfsTotalNodes / numFiles);
                     System.out.println("Ants average run time: " + mcTotalTime / numFiles);
                 }
-            }
         }
     }
 }
