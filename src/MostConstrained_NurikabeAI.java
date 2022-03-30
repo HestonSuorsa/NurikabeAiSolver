@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class MostConstrained_NurikabeAI {
     Board gameBoard;
@@ -47,10 +44,22 @@ public class MostConstrained_NurikabeAI {
         //Start with an origin island
 
         boolean valid = false;
+        boolean badMoveMade;
         while(!valid) {
             //TODO: Check if all origin islands are off that stack
+            //Set board to all water again
+            b.resetBoard();
             for(Cell currOriginIsland : originIslands) {
-                System.out.println("Doing origin: " + currOriginIsland);
+                b.drawLand(currOriginIsland.getRow(), currOriginIsland.getCol());
+            }
+            badMoveMade=false;
+
+            for(Cell currOriginIsland : originIslands) {
+//                System.out.println("Doing origin: " + currOriginIsland);
+                Set<Cell> exploredCells = new HashSet<Cell>();
+                ArrayList<Cell> frontierCells = new ArrayList<>();
+                frontierCells.add(currOriginIsland);
+                Cell temp = currOriginIsland;
 //            Cell currOriginIsland = originIslandsToIsolate.pop();
 //                moves.add(currOriginIsland);
 //
@@ -63,10 +72,11 @@ public class MostConstrained_NurikabeAI {
 
 
                 int currIslandSize = 1;
-                System.out.println(currOriginIsland);
+//                System.out.println(currOriginIsland);
                 while (currIslandSize < currOriginIsland.getIslandSize())  {
-                    System.out.println("Curr island size " + currIslandSize);
-                    Set<Cell> exploredCells = new HashSet<Cell>();
+//                    System.out.println("Curr island size " + currIslandSize);
+
+
 //                    int currIslandRow = currOriginIsland.getRow();
 //                    int currIslandCol = currOriginIsland.getCol();
 
@@ -116,44 +126,100 @@ public class MostConstrained_NurikabeAI {
 //                        System.out.println("I set the land");
 //                    }
 
-                    Cell temp = currOriginIsland;
+
                     boolean waterFound = false;
                     while(!waterFound) {
 
                         ArrayList<Cell> potentialLandNeighbors = getPotentialLandNeighbors(b,temp);
-                        for (Cell cell : potentialLandNeighbors) {
-                            System.out.println(cell);
-                            System.out.println(b);
+
+//                        for (Cell cell : potentialLandNeighbors) {
+////                            System.out.println(cell);
+////                            System.out.println(b);
+//                            if (cell != null && cell.getIsWater()) {
+//                                waterFound = true;
+//                                cell.setIsLand();
+//                                frontierCells.add(cell);
+////                                System.out.println(b);
+//                                break;
+//                            }
+//                        }
+                        int randNum=0;
+                        if(potentialLandNeighbors.size()>0) {
+                            Random rn1 = new Random();
+                            randNum = rn1.nextInt(potentialLandNeighbors.size());
+                        }
+                        for(int i=0; i<potentialLandNeighbors.size(); i++) {
+
+                            Cell cell = potentialLandNeighbors.get((randNum+i) % potentialLandNeighbors.size());
                             if (cell != null && cell.getIsWater()) {
                                 waterFound = true;
                                 cell.setIsLand();
-                                System.out.println(b);
+                                frontierCells.add(cell);
+                                break;
                             }
                         }
-                        exploredCells.add(temp);
-                        //call method to add neighbor neighbors to potential land and prune again
-                        if(!waterFound) {
-                            for(Cell cell : potentialLandNeighbors) {
-                                if(cell != null && !exploredCells.contains(cell)) {
-                                    System.out.println("Reassigning temp\n");
-                                    temp=cell;
-                                    break;
-                                }
-                            }
-                        }
-                    }
 
+                        //call method to add neighbor neighbors to potential land and prune again
+//                        boolean validCellFound = false;
+                        //REdo this
+                        int counter = 0;
+                        if(!waterFound) {
+                            frontierCells.remove(temp);
+                            exploredCells.add(temp);
+                        }
+                        if(frontierCells.size() > 0) {
+                            Random rn2 = new Random();
+                            randNum = rn2.nextInt(frontierCells.size());
+                            temp = frontierCells.get(randNum);
+                        }
+                        if(frontierCells.size() ==0) {
+//                            System.out.println("No frontier cells");
+                            badMoveMade=true; //escape
+                            break;
+                        }
+//                        while(temp == currOriginIsland) {
+//                            randNum = rn.nextInt(frontierCells.size());
+//                            temp = frontierCells.get(randNum);
+//                        }
+//                            while(potentialLandNeighbors.size() > 0 && !validCellFound && counter < potentialLandNeighbors.size()) {
+//                                Random rn = new Random();
+//                                int randNum = rn.nextInt(potentialLandNeighbors.size());
+//                                Cell randomlyChosenCell = potentialLandNeighbors.get(randNum);
+//                                counter++;
+//                                if(randomlyChosenCell != null && !exploredCells.contains(randomlyChosenCell)) {
+//                                    validCellFound = true;
+//                                    temp = randomlyChosenCell;
+//                                }
+//                            }
+
+//                            for(Cell cell : potentialLandNeighbors) {
+//                                if(cell != null && !exploredCells.contains(cell)) {
+//                                    System.out.println("Reassigning temp\n");
+//                                    temp=cell;
+//                                    break;
+//                                }
+//                            }
+
+                    }
+                    if(badMoveMade) { break; }
                     Set<Cell> lands = new HashSet<>();
                     findConnectedLand(currOriginIsland, lands, b);
                     currIslandSize = lands.size();
 
                 }
+                if(badMoveMade) { break; }
             }
 
             //Check if it's a valid solution - only if a pond exists
-            if(!pondExists(b)) {
-                System.out.println("Checking for pond");
+//            System.out.println("Solution found, checking if valid.");
+            if(!pondExists(b) && !lakeExists(b)) {
                 valid=true;
+            }
+            if(!valid) {
+//                System.out.println("Solution not valid.\n");
+            }
+            else {
+                System.out.println("Solution valid\n");
             }
 
         }
@@ -193,7 +259,7 @@ public class MostConstrained_NurikabeAI {
         potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
         potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
         potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
-        System.out.println(potentialLandNeighbors);
+//        System.out.println(potentialLandNeighbors);
 
 
         //See if any of these neighbors are cut islands
@@ -249,6 +315,28 @@ public class MostConstrained_NurikabeAI {
                     && b.getCell(r-1,c).getIsWater();
         }
     }
+
+    public Boolean lakeExists(Board b) {
+        Cell temp;
+        for(int r=0; r<b.height; r++) {
+            for(int c=0; c<b.width; c++) {
+                temp = b.getCell(r,c);
+                Cell right = getRightNeighbor(b,r,c);
+                if(temp.getIsWater() && right != null && right.getIsWater()) {
+                    Cell bottom = getBottomNeighbor(b,r,c);
+                    Cell diagonal = getBottomNeighbor(b,right.getRow(),right.getCol());
+
+                    if(bottom != null && diagonal != null && bottom.getIsWater() && diagonal.getIsWater()) {
+                        //Pond found!
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     public Boolean pondExists(Board b) {
         // TODO: Make sure water can be connected
         //Make sure that there is only one pond in the board
