@@ -60,6 +60,9 @@ public class MostConstrained_NurikabeAI {
                 ArrayList<Cell> frontierCells = new ArrayList<>();
                 frontierCells.add(currOriginIsland);
                 Cell temp = currOriginIsland;
+                if(temp == b.getCell(5,6)) {
+                    System.out.println("hi");
+                }
 //            Cell currOriginIsland = originIslandsToIsolate.pop();
 //                moves.add(currOriginIsland);
 //
@@ -209,10 +212,10 @@ public class MostConstrained_NurikabeAI {
                 }
                 if(badMoveMade) { break; }
             }
-
             //Check if it's a valid solution - only if a pond exists
 //            System.out.println("Solution found, checking if valid.");
-            if(!pondExists(b) && !lakeExists(b)) {
+            if(badMoveMade) {continue;}
+            if(!pondExists(b) && !lakeExists(b) && checkIslands(b)) {
                 valid=true;
             }
             if(!valid) {
@@ -233,7 +236,7 @@ public class MostConstrained_NurikabeAI {
         //if run out of places to put land, backtrack to next origin island
         //when do we check if we isolated water?
 
-
+        endBoard = b.toString();
         return true;
     }
 
