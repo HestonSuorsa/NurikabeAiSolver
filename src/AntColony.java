@@ -1,14 +1,15 @@
 import java.util.*;
 
-public class AnyColony {
+public class AntColony {
     Board gameBoard;
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
     String endBoard;
     Stack<Cell> moves = new Stack<Cell>();
     Stack<Cell> originIslandsToIsolate = new Stack<Cell>();
+    long nodesVisited;
 
-    public AnyColony(Board board, int numIslands) {
+    public AntColony(Board board, int numIslands) {
         this.gameBoard = board;
         this.height = board.height;
         this.width = board.width;
@@ -22,6 +23,7 @@ public class AnyColony {
         }
         this.endBoard = board.toString();
         originIslands.sort(new SortBySize());
+        nodesVisited = 0;
     }
 
 

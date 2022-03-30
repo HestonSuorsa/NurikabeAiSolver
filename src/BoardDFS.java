@@ -2,14 +2,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DFS {
+public class BoardDFS {
     Board gameBoard;
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
     String endBoard;
     int nodesVisited;
 
-    public DFS(Board board, int numIslands) {
+    public BoardDFS(Board board, int numIslands) {
         this.gameBoard = board;
         this.height = board.height;
         this.width = board.width;
@@ -52,12 +52,10 @@ public class DFS {
         if (curCol == width-1) nextRow++;
 
         if (!curCell.getIsOrigin() && isValid(b.drawWater(curRow,curCol), curRow, curCol)) {
-            //System.out.println("draw water on (" + curRow + "," + curCol + ")\n" + b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
         if(isValid(b.drawLand(curRow,curCol), curRow, curCol)) {
-            //System.out.println("draw land on (" + curRow + "," + curCol + ")\n" + b);
             if (DFS(b, nextRow, nextCol)) return true;
         }
 
@@ -107,7 +105,6 @@ public class DFS {
         }
     }
     public Boolean pondExists(Board b) {
-        // TODO: Make sure water can be connected
         //Make sure that there is only one pond in the board
         Set<Cell> cellsWithWater = new HashSet<>();
 
