@@ -6,7 +6,7 @@ public class TesterClass {
     public static void main(String[] args) {
         Scanner scan = null;
         try {
-            File f = new File("test.txt");
+            File f = new File("15x15_1.txt");
             scan = new Scanner(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -31,15 +31,14 @@ public class TesterClass {
             curCell.setIsLand();
             curCell.setIslandSize(size);
         }
-        board.getCell(0,0).setIsLand();
-        board.getCell(1,0).setIsLand();
-        board.getCell(1,1).setIsLand();
 
         //Now the board is completely initialized and dfs can happen
 
         //This breaks bc we aren't done yet lol
-        DFS_NurikabeAI dfs = new DFS_NurikabeAI(board, numIslands);
-        System.out.println(board);
-        System.out.println(dfs.checkIslands(board));
+        IslandDFS ih = new IslandDFS(board, numIslands);
+        long start = System.currentTimeMillis();
+        System.out.println(ih.run());
+        long end = System.currentTimeMillis();
+        System.out.println("Time: " + (end-start) + " Nodes: " + ih.nodesVisited);
     }
 }

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class MostConstrained_NurikabeAI {
+public class AnyColony {
     Board gameBoard;
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
@@ -8,7 +8,7 @@ public class MostConstrained_NurikabeAI {
     Stack<Cell> moves = new Stack<Cell>();
     Stack<Cell> originIslandsToIsolate = new Stack<Cell>();
 
-    public MostConstrained_NurikabeAI(Board board, int numIslands) {
+    public AnyColony(Board board, int numIslands) {
         this.gameBoard = board;
         this.height = board.height;
         this.width = board.width;
@@ -32,12 +32,12 @@ public class MostConstrained_NurikabeAI {
             originIslandsToIsolate.push(originIslands.get(i));
         }
 
-        if (MCSolver(gameBoard))
+        if (antColonySolver(gameBoard))
             return endBoard;
         return "No solution found";
     }
 
-    public boolean MCSolver(Board b) {
+    public boolean antColonySolver(Board b) {
 
         //Start with an entirely unknown board
 

@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -61,8 +59,8 @@ public class Main {
                             curCell.setIslandSize(size);
                         }
                         //Now the board is completely initialized and dfs can happen
-                        DFS_NurikabeAI dfs = new DFS_NurikabeAI(board, numIslands);
-                        MostConstrained_NurikabeAI mc = new MostConstrained_NurikabeAI(board, numIslands);
+                        DFS dfs = new DFS(board, numIslands);
+                        AnyColony antc = new AnyColony(board, numIslands);
                         long start = System.currentTimeMillis();
                         System.out.println(dfs.run());
                         long end = System.currentTimeMillis();
@@ -72,7 +70,7 @@ public class Main {
                         dfsTotalNodes += dfs.nodesVisited;
 
                         start = System.currentTimeMillis();
-                        System.out.println(mc.run());
+                        System.out.println(antc.run());
                         end = System.currentTimeMillis();
                         elapsed = end - start;
                         System.out.println("Ants ran in " + elapsed + " ms\n");

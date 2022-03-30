@@ -10,6 +10,7 @@ public class Cell {
         this.row = row;
         this.col = col;
         this.isOrigin = isOrigin;
+        this.islandSize = 0;
     }
 
     public int getRow() {

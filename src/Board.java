@@ -85,7 +85,16 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
-                sb.append(board[r][c].toString());
+                int size = board[r][c].getIslandSize();
+                switch (size) {
+                    case 10: sb.append("A"); break;
+                    case 11: sb.append("B"); break;
+                    case 12: sb.append("C"); break;
+                    case 13: sb.append("D"); break;
+                    case 14: sb.append("E"); break;
+                    case 15: sb.append("F"); break;
+                    default: sb.append(board[r][c].toString());
+                }
             }
             if (r != height-1) sb.append("\n");
         }

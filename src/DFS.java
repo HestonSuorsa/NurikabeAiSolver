@@ -1,16 +1,15 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
-public class DFS_NurikabeAI {
+public class DFS {
     Board gameBoard;
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
     String endBoard;
     int nodesVisited;
 
-    public DFS_NurikabeAI(Board board, int numIslands) {
+    public DFS(Board board, int numIslands) {
         this.gameBoard = board;
         this.height = board.height;
         this.width = board.width;
@@ -34,10 +33,6 @@ public class DFS_NurikabeAI {
 
     public boolean DFS(Board b, int curRow, int curCol) {
         Cell curCell = b.getCell(curRow,curCol);
-        if (curCell.getIsLand() && curRow == 0 && curCol == 3) {
-            System.out.println("L on 0,3\n" + b);
-            int i = 0;
-        }
         nodesVisited++;
 
         // Goal State check (on last index)
