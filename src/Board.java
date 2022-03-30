@@ -1,9 +1,6 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Board {
-    // Boolean[][] board;
     Cell[][] board;
     int height, width;
     int numCells;
