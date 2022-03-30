@@ -87,7 +87,7 @@ public class Board {
             for (int c = 0; c < width; c++) {
                 sb.append(board[r][c].toString());
             }
-            sb.append("\n");
+            if (r != height-1) sb.append("\n");
         }
         return sb.toString();
     }
