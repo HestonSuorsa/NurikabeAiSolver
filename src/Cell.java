@@ -5,13 +5,19 @@ public class Cell {
     private int col;
     private int islandSize;
     private boolean isOrigin, isWater;
+    private int pheremone;
 
     public Cell(int row, int col, boolean isOrigin) {
         this.row = row;
         this.col = col;
         this.isOrigin = isOrigin;
         this.islandSize = 0;
+        this.pheremone = 0;
     }
+
+    public int getPheremone() { return pheremone; }
+
+    public void setPheremone(int pheremone) { this.pheremone=pheremone; }
 
     public int getRow() {
         return row;

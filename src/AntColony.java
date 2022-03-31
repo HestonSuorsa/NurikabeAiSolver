@@ -5,8 +5,6 @@ public class AntColony {
     int height, width, numIslands;
     ArrayList<Cell> originIslands;
     String endBoard;
-    Stack<Cell> moves = new Stack<Cell>();
-    Stack<Cell> originIslandsToIsolate = new Stack<Cell>();
     long nodesVisited;
 
     public AntColony(Board board, int numIslands) {
@@ -26,13 +24,7 @@ public class AntColony {
         nodesVisited = 0;
     }
 
-
-
     public String run() {
-        //Add all origin islands to the stack to be done
-        for(int i=originIslands.size()-1; i>=0; i--) {
-            originIslandsToIsolate.push(originIslands.get(i));
-        }
 
         if (antColonySolver(gameBoard))
             return endBoard;
@@ -41,15 +33,10 @@ public class AntColony {
 
     public boolean antColonySolver(Board b) {
 
-        //Start with an entirely unknown board
-
-        //Start with an origin island
-
         boolean valid = false;
         boolean badMoveMade;
         while(!valid) {
             //TODO: Check if all origin islands are off that stack
-            //Set board to all water again
             b.resetBoard();
             for(Cell currOriginIsland : originIslands) {
                 b.drawLand(currOriginIsland.getRow(), currOriginIsland.getCol());
@@ -57,97 +44,17 @@ public class AntColony {
             badMoveMade=false;
 
             for(Cell currOriginIsland : originIslands) {
-//                System.out.println("Doing origin: " + currOriginIsland);
                 Set<Cell> exploredCells = new HashSet<Cell>();
                 ArrayList<Cell> frontierCells = new ArrayList<>();
                 frontierCells.add(currOriginIsland);
                 Cell temp = currOriginIsland;
-                if(temp == b.getCell(5,6)) {
-                    System.out.println("hi");
-                }
-//            Cell currOriginIsland = originIslandsToIsolate.pop();
-//                moves.add(currOriginIsland);
-//
-//                Cell originNeighbors[] = {
-//                        getLeftNeighbor(b, currIslandRow, currIslandCol),
-//                        getTopNeighbor(b, currIslandRow, currIslandCol),
-//                        getRightNeighbor(b, currIslandRow, currIslandCol),
-//                        getBottomNeighbor(b, currIslandRow, currIslandCol)
-//                };
-
-
                 int currIslandSize = 1;
-//                System.out.println(currOriginIsland);
                 while (currIslandSize < currOriginIsland.getIslandSize())  {
-//                    System.out.println("Curr island size " + currIslandSize);
-
-
-//                    int currIslandRow = currOriginIsland.getRow();
-//                    int currIslandCol = currOriginIsland.getCol();
-
-                    //add neighbors to list
-//                    ArrayList<Cell> potentialLandNeighbors = new ArrayList<Cell>();
-//                    potentialLandNeighbors.add(getLeftNeighbor(b, currIslandRow, currIslandCol));
-//                    potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
-//                    potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
-//                    potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
-//                    System.out.println(potentialLandNeighbors);
-//
-//
-//                    //See if any of these neighbors are cut islands
-//                    Set<Cell> rejectSet = new HashSet<>();
-//                    for(Cell potentialLandNeighbor : potentialLandNeighbors) {
-//                        if(potentialLandNeighbor == null) {
-//                            rejectSet.add(potentialLandNeighbor);
-//                            continue;
-//                        }
-////                        if(potentialLandNeighbor.getIsLand()) {
-////                            rejectSet.add(potentialLandNeighbor);
-////                            continue;
-////                        }
-//                        ArrayList<Cell> neighborNeighbors = b.getNeighbors(potentialLandNeighbor.getRow(),potentialLandNeighbor.getCol());
-//                        for(Cell cell : neighborNeighbors) {
-//                            if(cell.getIsLand() && cell != currOriginIsland) {
-//                                rejectSet.add(potentialLandNeighbor);
-//                                break;
-//                            }
-//                        }
-//                    }
-//
-//                    //Remove the reject set from potential land
-////                    potentialLandNeighbors.removeAll(rejectSet);
-//                    for(Cell cell: rejectSet) {
-//                        potentialLandNeighbors.remove(cell);
-//                    }
-
-
-
-                    //can expant potential negihbors to negihbor neighbors!! for more land :)
-
-                    //If possible, select a neighbor to make land now
-//                    if(potentialLandNeighbors.size() > 0) {
-//                        //Have a heuristic for choosing one?
-//                        potentialLandNeighbors.get(0).setIsLand();
-//                        System.out.println("I set the land");
-//                    }
-
-
                     boolean waterFound = false;
                     while(!waterFound) {
 
                         ArrayList<Cell> potentialLandNeighbors = getPotentialLandNeighbors(b,temp);
 
-//                        for (Cell cell : potentialLandNeighbors) {
-////                            System.out.println(cell);
-////                            System.out.println(b);
-//                            if (cell != null && cell.getIsWater()) {
-//                                waterFound = true;
-//                                cell.setIsLand();
-//                                frontierCells.add(cell);
-////                                System.out.println(b);
-//                                break;
-//                            }
-//                        }
                         int randNum=0;
                         if(potentialLandNeighbors.size()>0) {
                             Random rn1 = new Random();
@@ -164,10 +71,6 @@ public class AntColony {
                             }
                         }
 
-                        //call method to add neighbor neighbors to potential land and prune again
-//                        boolean validCellFound = false;
-                        //REdo this
-                        int counter = 0;
                         if(!waterFound) {
                             frontierCells.remove(temp);
                             exploredCells.add(temp);
@@ -178,66 +81,27 @@ public class AntColony {
                             temp = frontierCells.get(randNum);
                         }
                         if(frontierCells.size() ==0) {
-//                            System.out.println("No frontier cells");
-                            badMoveMade=true; //escape
+                            badMoveMade=true;
                             break;
                         }
-//                        while(temp == currOriginIsland) {
-//                            randNum = rn.nextInt(frontierCells.size());
-//                            temp = frontierCells.get(randNum);
-//                        }
-//                            while(potentialLandNeighbors.size() > 0 && !validCellFound && counter < potentialLandNeighbors.size()) {
-//                                Random rn = new Random();
-//                                int randNum = rn.nextInt(potentialLandNeighbors.size());
-//                                Cell randomlyChosenCell = potentialLandNeighbors.get(randNum);
-//                                counter++;
-//                                if(randomlyChosenCell != null && !exploredCells.contains(randomlyChosenCell)) {
-//                                    validCellFound = true;
-//                                    temp = randomlyChosenCell;
-//                                }
-//                            }
-
-//                            for(Cell cell : potentialLandNeighbors) {
-//                                if(cell != null && !exploredCells.contains(cell)) {
-//                                    System.out.println("Reassigning temp\n");
-//                                    temp=cell;
-//                                    break;
-//                                }
-//                            }
 
                     }
                     if(badMoveMade) { break; }
                     Set<Cell> lands = new HashSet<>();
                     findConnectedLand(currOriginIsland, lands, b);
                     currIslandSize = lands.size();
-
                 }
                 if(badMoveMade) { break; }
             }
-            //Check if it's a valid solution - only if a pond exists
-//            System.out.println("Solution found, checking if valid.");
-            if(badMoveMade) {continue;}
+            if(badMoveMade) {
+                nodesVisited++;
+                continue;
+            }
             if(!pondExists(b) && !lakeExists(b) && checkIslands(b)) {
+                nodesVisited++;
                 valid=true;
             }
-            if(!valid) {
-//                System.out.println("Solution not valid.\n");
-            }
-            else {
-                System.out.println("Solution valid\n");
-            }
-
         }
-        //Set leftmost cell to land - add to stack
-        //Surround that island with water - add to stack
-        //move to next origin island and do the same
-
-        //if when placing water, place on an already existing land, put the land in another spot next to origin island
-        //pop moves off the stack until you reach the origin island, now place land in different spot
-        //if after surrounding the island with water you create a pool, backtrack to origin island and place land in different spot
-        //if run out of places to put land, backtrack to next origin island
-        //when do we check if we isolated water?
-
         endBoard = b.toString();
         return true;
     }
@@ -264,20 +128,14 @@ public class AntColony {
         potentialLandNeighbors.add(getTopNeighbor(b, currIslandRow, currIslandCol));
         potentialLandNeighbors.add(getRightNeighbor(b, currIslandRow, currIslandCol));
         potentialLandNeighbors.add(getBottomNeighbor(b, currIslandRow, currIslandCol));
-//        System.out.println(potentialLandNeighbors);
 
-
-        //See if any of these neighbors are cut islands
         Set<Cell> rejectSet = new HashSet<>();
         for(Cell potentialLandNeighbor : potentialLandNeighbors) {
             if(potentialLandNeighbor == null) {
                 rejectSet.add(potentialLandNeighbor);
                 continue;
             }
-//                        if(potentialLandNeighbor.getIsLand()) {
-//                            rejectSet.add(potentialLandNeighbor);
-//                            continue;
-//                        }
+
             ArrayList<Cell> neighborNeighbors = b.getNeighbors(potentialLandNeighbor.getRow(),potentialLandNeighbor.getCol());
             for(Cell cell : neighborNeighbors) {
                 if(cell.getIsLand() && cell != currOriginIsland) {
@@ -287,8 +145,6 @@ public class AntColony {
             }
         }
 
-        //Remove the reject set from potential land
-//                    potentialLandNeighbors.removeAll(rejectSet);
         for(Cell cell: rejectSet) {
             potentialLandNeighbors.remove(cell);
         }
@@ -299,17 +155,6 @@ public class AntColony {
     // ------ CHECKER METHODS ------
     public Boolean isValidEndGoal(Board b, int curRow, int curCol) {
         return !lakeExists(b,curRow,curCol) && !pondExists(b) && verifyIslands(b);
-    }
-
-    public Boolean isLastIndex(int r, int c) {
-        return r == height-1 && c == width-1;
-    }
-
-    public Boolean isGoal(Board b, int r, int c) {
-        Cell curCell = b.getCell(r,c);
-        if (isValidEndGoal(b.drawLand(r,c),r,c)) return true;
-        if (!curCell.getIsOrigin() && isValidEndGoal(b.drawWater(r,c),r,c)) return true;
-        return false; // Invalid solution
     }
 
     public Boolean lakeExists(Board b, int r, int c) {
