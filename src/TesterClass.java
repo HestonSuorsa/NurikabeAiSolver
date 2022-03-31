@@ -6,7 +6,7 @@ public class TesterClass {
     public static void main(String[] args) {
         Scanner scan = null;
         try {
-            File f = new File("7x7_2.txt");
+            File f = new File("7x7_5.txt");
             scan = new Scanner(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -35,12 +35,12 @@ public class TesterClass {
         //Now the board is completely initialized and dfs can happen
 
         //This breaks bc we aren't done yet lol
-        IslandDFS ih = new IslandDFS(board, numIslands);
+        AntColony ac = new AntColony(board, numIslands);
         //AntColony ant = new AntColony(board, numIslands);
 
         long start = System.currentTimeMillis();
-        System.out.println(ih.run());
+        System.out.println(ac.run());
         long end = System.currentTimeMillis();
-        System.out.println("Time: " + (end-start) + " Nodes: " + ih.nodesVisited);
+        System.out.println("Time: " + (end-start) + " Nodes: " + ac.nodesVisited);
     }
 }

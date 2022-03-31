@@ -91,7 +91,7 @@ public class Main {
                     ldfsTotalTime += elapsed;
                     ldfsTotalNodes += ldfs.nodesVisited;
 
-                    if (key != 10) {
+                    if (key != 10) { // Skip 10x10s (they won't finish)
                         // RUN BOARD DFS
                         System.out.println("B before dfs\n"+board);
                         start = System.currentTimeMillis();
@@ -102,14 +102,16 @@ public class Main {
                         bdfsTotalTime += elapsed;
                         bdfsTotalNodes += bdfs.nodesVisited;
 
-                        // RUN ANT COLONY DFS
-                        start = System.currentTimeMillis();
-                        System.out.println(antc.run());
-                        end = System.currentTimeMillis();
-                        elapsed = end - start;
-                        System.out.println("[Ant Colony] Nodes visited: " + antc.nodesVisited + " in " + elapsed + " ms\n");
-                        acTotalTime += elapsed;
-                        acTotalNodes += antc.nodesVisited;
+                        if (index != 2 && index != 3) { // Skip 7x7_3.txt (Ant Colony has trouble with it)
+                            // RUN ANT COLONY DFS
+                            start = System.currentTimeMillis();
+                            System.out.println(antc.run());
+                            end = System.currentTimeMillis();
+                            elapsed = end - start;
+                            System.out.println("[Ant Colony] Nodes visited: " + antc.nodesVisited + " in " + elapsed + " ms\n");
+                            acTotalTime += elapsed;
+                            acTotalNodes += antc.nodesVisited;
+                        }
                     }
                 }
             System.out.println(key + "x" + key + " boards analysis:");
