@@ -47,21 +47,12 @@ public class IslandDFS {
     }
 
     public boolean IHDFS(Board b, int i, int curSize, int curRow, int curCol) {
-//        System.out.println(b);
-//        System.out.println("Current: " + curRow + "," + curCol); // TODO: REMOVE
-        nodesVisited++;
         Cell origin = originIslands.get(i);
         Set<Cell> restrictedGroup = restricted[i];
 
-//        System.out.println("Origin Restriciton group: " + i);
-//        for (Cell c : restrictedGroup) { // TODO: REMOVE
-//            System.out.println("("+c.getRow()+","+c.getCol()+")");
-//        }
-
         if (curSize == origin.getIslandSize()) {
-//            System.out.println("Island is of size"); // TODO: REMOVE
             if (i == originIslands.size()-1) {
-//                System.out.println("LAST ISLAND!"); // TODO: REMOVE
+                nodesVisited++;
                 if (isValidEndGoal(b)) {
                     endBoard = b.toString();
                     return true;
@@ -69,14 +60,9 @@ public class IslandDFS {
                 return false;
             }
             Cell nextOrigin = originIslands.get(i+1);
-//            System.out.println("Going to next island at " + nextOrigin.getRow() +
-//                    "," + nextOrigin.getCol()); // TODO: REMOVE
             i++;
-//            System.out.println("Next group: "+ i); // TODO: REMOVE
             return IHDFS(b, i, 1, nextOrigin.getRow(), nextOrigin.getCol());
         }
-//        System.out.println("Growing island " + curRow + "," + curCol + " to " +
-//                " size " + (curSize+1)); // TODO: REMOVE
 
         for (Cell n : b.getNeighbors(curRow,curCol)) {
             restrictedGroup.add(n);
@@ -101,22 +87,17 @@ public class IslandDFS {
     }
 
     public boolean isRestricted(Cell cell, int i) {
-        //System.out.println("Num island: " + i);
         for (int j = 0; j < numIslands; j++) {
-            if (j!=i && restricted[j].contains(cell)) {
-                //System.out.println("Restricted: " + cell.getRow() + "," + cell.getCol());
-                return true;
-            }
+            if (j!=i && restricted[j].contains(cell)) return true;
         }
         return false;
     }
 
-    public Boolean isValidEndGoal(Board b) {
+    public boolean isValidEndGoal(Board b) {
         return !lakeExists(b) && !pondExists(b)/* && verifyIslands(b)*/;
     }
 
-    public Boolean pondExists(Board b) {
-        // TODO: Make sure water can be connected
+    public boolean pondExists(Board b) {
         //Make sure that there is only one pond in the board
         Set<Cell> cellsWithWater = new HashSet<>();
 

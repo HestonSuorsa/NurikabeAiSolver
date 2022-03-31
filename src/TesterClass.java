@@ -6,7 +6,7 @@ public class TesterClass {
     public static void main(String[] args) {
         Scanner scan = null;
         try {
-            File f = new File("15x15_1.txt");
+            File f = new File("7x7_2.txt");
             scan = new Scanner(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -36,6 +36,8 @@ public class TesterClass {
 
         //This breaks bc we aren't done yet lol
         IslandDFS ih = new IslandDFS(board, numIslands);
+        //AntColony ant = new AntColony(board, numIslands);
+
         long start = System.currentTimeMillis();
         System.out.println(ih.run());
         long end = System.currentTimeMillis();

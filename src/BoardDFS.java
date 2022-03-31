@@ -27,6 +27,7 @@ public class BoardDFS {
     }
 
     public String run() {
+        gameBoard.resetBoard();
         if (DFS(gameBoard, 0, 0)) return endBoard;
         else return "No solution found";
     }
@@ -69,7 +70,7 @@ public class BoardDFS {
      * violate any constraints else false
      * @return Boolean
      */
-    public Boolean isValid(Board b, int curRow, int curCol) {
+    public boolean isValid(Board b, int curRow, int curCol) {
         return !lakeExists(b,curRow,curCol) && !pondExists(b) && checkIslands(b);
     }
 
@@ -81,15 +82,15 @@ public class BoardDFS {
      * @param curCol
      * @return
      */
-    public Boolean isValidEndGoal(Board b, int curRow, int curCol) {
+    public boolean isValidEndGoal(Board b, int curRow, int curCol) {
         return !lakeExists(b,curRow,curCol) && !pondExists(b) && verifyIslands(b);
     }
 
-    public Boolean isLastIndex(int r, int c) {
+    public boolean isLastIndex(int r, int c) {
         return r == height-1 && c == width-1;
     }
 
-    public Boolean isGoal(Board b, int r, int c) {
+    public boolean isGoal(Board b, int r, int c) {
         Cell curCell = b.getCell(r,c);
         if (!curCell.getIsOrigin() && isValidEndGoal(b.drawWater(r,c),r,c)) return true;
         if (isValidEndGoal(b.drawLand(r,c),r,c)) return true;

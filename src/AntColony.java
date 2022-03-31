@@ -153,11 +153,12 @@ public class AntColony {
     }
 
     // ------ CHECKER METHODS ------
-    public Boolean isValidEndGoal(Board b, int curRow, int curCol) {
+    public boolean isValidEndGoal(Board b, int curRow, int curCol) {
         return !lakeExists(b,curRow,curCol) && !pondExists(b) && verifyIslands(b);
     }
 
-    public Boolean lakeExists(Board b, int r, int c) {
+
+    public boolean lakeExists(Board b, int r, int c) {
         if (b.getCell(r,c).getIsLand() || r == 0 || c == 0) return false;
             // Return false if drew land, or if impossible for lake to have been made
         else { // Cell is water (check cells that for 2x2 w/ this as right lower corner)
@@ -166,7 +167,7 @@ public class AntColony {
         }
     }
 
-    public Boolean lakeExists(Board b) {
+    public boolean lakeExists(Board b) {
         Cell temp;
         for(int r=0; r<b.height; r++) {
             for(int c=0; c<b.width; c++) {
@@ -187,7 +188,7 @@ public class AntColony {
     }
 
 
-    public Boolean pondExists(Board b) {
+    public boolean pondExists(Board b) {
         // TODO: Make sure water can be connected
         //Make sure that there is only one pond in the board
         Set<Cell> cellsWithWater = new HashSet<>();
@@ -207,7 +208,7 @@ public class AntColony {
     }
 
 
-    public Boolean checkIslands(Board b) {
+    public boolean checkIslands(Board b) {
         Set<Cell> lands = new HashSet<>();
         for (Cell o : originIslands) {
             findConnectedLand(o, lands, b);
