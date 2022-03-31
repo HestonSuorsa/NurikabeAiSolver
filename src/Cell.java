@@ -1,23 +1,21 @@
-import java.util.ArrayList;
-
 public class Cell {
     private int row;
     private int col;
     private int islandSize;
     private boolean isOrigin, isWater;
-    private int pheremone;
+    private int pheromone;
 
     public Cell(int row, int col, boolean isOrigin) {
         this.row = row;
         this.col = col;
         this.isOrigin = isOrigin;
         this.islandSize = 0;
-        this.pheremone = 0;
+        this.pheromone = 0;
     }
 
-    public int getPheremone() { return pheremone; }
+    public int getPheromone() { return pheromone; }
 
-    public void setPheremone(int pheremone) { this.pheremone=pheremone; }
+    public void setPheromone(int pheromone) { this.pheromone = pheromone; }
 
     public int getRow() {
         return row;

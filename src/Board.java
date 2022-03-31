@@ -1,3 +1,6 @@
+// Verifiers modeled after this code
+// https://github.com/dbathon/nurikabe-java/blob/dfd9f9da33a3d67dc0e2153e433ad2b0be057f9e/src/main/java/dbathon/nurikabe/board/Board.java#L182
+
 import java.util.ArrayList;
 
 public class Board {

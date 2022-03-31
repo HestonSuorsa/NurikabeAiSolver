@@ -1,3 +1,5 @@
+// Based off of this pseudocode
+// https://www.researchgate.net/publication/333755704_Solving_Nurikabe_with_Ant_Colony_Optimization_Extended_version
 import java.util.*;
 
 public class AntColony {

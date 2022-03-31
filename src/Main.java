@@ -93,6 +93,7 @@ public class Main {
 
                     if (key != 10) {
                         // RUN BOARD DFS
+                        System.out.println("B before dfs\n"+board);
                         start = System.currentTimeMillis();
                         System.out.println(bdfs.run());
                         end = System.currentTimeMillis();
